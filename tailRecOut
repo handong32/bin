@@ -1,6 +1,19 @@
 #!/bin/bash
+#set -x
+dir=${1:-"/users/hand32/experiment-scripts/logs/query1_cores16_frate100000_3600000_fbuff-1_itr1_ondemanddvfs1_source16_mapper4_sink16_repeat0/Flinklogs"}
+
+cd $dir || exit
 
 n=15
-names=( Operator_Source:\ Bids\ Source_{0..$n} )
+RE='.*numRecordsOutPerSecond....value....([[:digit:].]*).*'
 
-echo ${names[@]} 
+pat="Operator_Source:\ Bids\ Source_{0..$n}"
+files=$(eval ls -v $pat | while read file; do
+    echo -n "$file,"
+done)
+names=${files%,}
+#echo $names
+
+eval exec tail -n 1 -f $pat  | exec ~/bin/l2c "$names" "$RE"
+
+
