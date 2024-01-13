@@ -1,0 +1,6 @@
+#!/bin/bash
+
+n=15
+names=( Operator_Source:\ Bids\ Source_{0..$n} )
+
+echo ${names[@]} 
